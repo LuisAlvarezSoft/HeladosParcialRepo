@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use App\Http\Requests\StoreHeladoRequest;
 use Illuminate\Support\Facades\Validator;
-use Tests\TestCase; // Extiende la clase base de Laravel
+use Tests\TestCase;
 
 class ValidationTest extends TestCase
 {

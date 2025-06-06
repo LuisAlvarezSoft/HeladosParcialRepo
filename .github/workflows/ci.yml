@@ -38,6 +38,11 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress --no-suggest -q
 
+      - name: Instalar extensiones de PHP necesarias
+        run: |
+          sudo apt-get update
+          sudo apt-get install php-mysql
+  
       - name: Copy .env
         run: |
           cp .env.example .env
