@@ -53,7 +53,7 @@ jobs:
 
       - name: Create Database
         run: |
-          mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS heladeria_test;"
+          mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS helados;"
 
       - name: Run Migrations
         run: |
