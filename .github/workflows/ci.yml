@@ -58,6 +58,12 @@ jobs:
       - name: Run Migrations
         run: |
           php artisan migrate --force
+        env:
+          DB_DATABASE: helados
+          DB_USERNAME: root
+          DB_PASSWORD: 1234
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
 
       - name: Run Tests
         run: |
