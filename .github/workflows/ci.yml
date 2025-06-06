@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: heladeria_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, bcmath, pdo_mysql
+          ini-values: post_max_size=256M, upload_max_filesize=256M, memory_limit=2G
+          coverage: xdebug
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest -q
+
+      - name: Copy .env
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          sed -i 's/DB_DATABASE=laravel/DB_DATABASE=heladeria_test/' .env
+          sed -i 's/DB_USERNAME=root/DB_USERNAME=root/' .env
+          sed -i 's/DB_PASSWORD=/DB_PASSWORD=root/' .env
+
+      - name: Create Database
+        run: |
+          mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS heladeria_test;"
+
+      - name: Run Migrations
+        run: |
+          php artisan migrate --env=testing --force
+
+      - name: Run Tests
+        run: |
+          php artisan test --coverage
+
+      - name: Check Test Results
+        if: failure()
+        run: |
+          echo "Tests failed."
+          exit 1
+
+      - name: Deployment Approved
+        if: success()
+        run: echo "DEPLOYMENT APPROVED - ALL TESTS SUCCESSFUL!"
