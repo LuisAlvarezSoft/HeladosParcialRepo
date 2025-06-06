@@ -47,9 +47,9 @@ jobs:
         run: |
           cp .env.example .env
           php artisan key:generate
-          sed -i 's/DB_DATABASE=laravel/DB_DATABASE=heladeria_test/' .env
+          sed -i 's/DB_DATABASE=laravel/DB_DATABASE=helados/' .env
           sed -i 's/DB_USERNAME=root/DB_USERNAME=root/' .env
-          sed -i 's/DB_PASSWORD=/DB_PASSWORD=root/' .env
+          sed -i 's/DB_PASSWORD=/DB_PASSWORD=1234/' .env
 
       - name: Create Database
         run: |
